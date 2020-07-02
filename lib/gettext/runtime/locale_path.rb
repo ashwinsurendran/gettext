@@ -56,9 +56,7 @@ module GetText
         if defined? ::Gem
           if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new("1.8.0")
             paths_to_active_gems = []
-            Gem::Specification.each do |spec|
-              paths_to_active_gems << spec.gem_dir if spec.activated
-            end
+            paths_to_active_gems << Gem::BasicSpecification.default_specifications_dir
 
             load_path += paths_to_active_gems
           else
