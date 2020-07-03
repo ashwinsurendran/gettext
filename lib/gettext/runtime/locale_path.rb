@@ -54,10 +54,18 @@ module GetText
 
         load_path = $LOAD_PATH.dup
         if defined? ::Gem
-          if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new("1.8.0")
+          current_gem_version = Gem::Version.new(Gem::RubyGemsVersion);
+          
+          if current_gem_version >= Gem::Version.new("1.8.0")
             paths_to_active_gems = []
-            paths_to_active_gems << Gem::BasicSpecification.default_specifications_dir
 
+            if current_gem_version == Gem::Version.new("3.0.3")
+              paths_to_active_gems << Gem::BasicSpecification.default_specifications_dir
+            else
+              Gem::Specification.each do |spec|
+                paths_to_active_gems << spec.gem_dir if spec.activated
+              end
+            end
             load_path += paths_to_active_gems
           else
             # NOTE: It's not exactly the same thing as the code above
